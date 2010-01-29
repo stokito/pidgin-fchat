@@ -1,0 +1,15 @@
+Source: fchat
+Section: net
+Priority: extra
+Maintainer: Sergey Ponomarev <stokito@gmail.com>
+Standards-Version: 3.8.3
+Build-Depends: debhelper (>= 7), libgnet-dev (>= 2.0.0), libpurple-dev (>= 2.6.0)
+Homepage: https://launchpad.net/~stokito/+archive/fchat
+
+Package: fchat
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: This is a FChat chat plugin for Pidgin and libpurple messengers.
+ FChat is p2p chat program for local networks based on UDP protocol. 
+ Your IP will be used as ID. If you have several network interfaces you can use diferent IP for them.
+ If you want use FChat for all networks enter IP 0.0.0.0 .

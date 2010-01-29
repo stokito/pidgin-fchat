@@ -1,0 +1,271 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fchat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-12-31 11:52+0200\n"
+"PO-Revision-Date: 2009-12-31 12:11+0300\n"
+"Last-Translator: Sergey Ponomarev <stokito@ya.ru>\n"
+"Language-Team:  <stokito@ya.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: src/actions.c:16
+msgid "Set board"
+msgstr "Оставить объявление..."
+
+#: src/actions.c:16
+msgid "Set message board text"
+msgstr "Установить объявление на доске объявлений"
+
+#: src/actions.c:20
+#: src/info.c:308
+msgid "Save"
+msgstr "Сохранить"
+
+#: src/actions.c:20
+#: src/buddy.c:150
+#: src/info.c:309
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/actions.c:30
+msgid "Set user info..."
+msgstr "Заполнить инфо обо мне..."
+
+#: src/actions.c:33
+msgid "Set message board..."
+msgstr "Оставить объявление"
+
+#: src/actions.c:64
+msgid "Send Beep"
+msgstr "Послать звуковой сигнал"
+
+#: src/actions.c:71
+msgid "Get board message..."
+msgstr "Посмотреть доску объявления"
+
+#: src/actions.c:78
+msgid "Get buddies..."
+msgstr "Запросить контакт лист"
+
+#: src/attention.c:13
+msgid "Nudge"
+msgstr "Вызов"
+
+#: src/attention.c:14
+#, c-format
+msgid "%s has nudged you!"
+msgstr "%s вызывает вас"
+
+#: src/attention.c:14
+#, c-format
+msgid "Nudging %s..."
+msgstr "Вызывается %s..."
+
+#: src/buddy.c:126
+msgid "Buddies"
+msgstr "Собеседники"
+
+#: src/buddy.c:147
+msgid "Select buddies"
+msgstr "Выбор собеседников"
+
+#: src/buddy.c:148
+msgid "Use Ctrl or Shift keys for multiply select"
+msgstr "Используйте клавиши Ctrl или Shift для множественого выбора"
+
+#: src/buddy.c:149
+msgid "Ok"
+msgstr "Добавить"
+
+#: src/chat.c:42
+msgid "Chat _room"
+msgstr "Чат комната"
+
+#: src/chat.c:54
+msgid "room"
+msgstr "комната"
+
+#: src/connection.c:75
+msgid "Incorrect address"
+msgstr ""
+
+#: src/connection.c:87
+msgid "Couldn't create UDP socket"
+msgstr ""
+
+#: src/fchat.c:119
+msgid "Codeset"
+msgstr ""
+
+#: src/fchat.c:122
+msgid "Port"
+msgstr ""
+
+#: src/fchat.c:125
+msgid "Use broadcast"
+msgstr ""
+
+#: src/fchat.c:128
+msgid "Accept unknown protocol version"
+msgstr ""
+
+#: src/fchat.c:131
+msgid "Keepalive interval"
+msgstr ""
+
+#: src/fchat.c:134
+msgid "Keepalive periods"
+msgstr ""
+
+#: src/fchat.c:137
+msgid "Require authorization"
+msgstr "Требовать авторизацию"
+
+#: src/fchat.c:140
+msgid "Confirm private messages"
+msgstr "Требовать подтверждения личных сообщений"
+
+#: src/fchat.c:143
+msgid "Confirm public messages"
+msgstr "Требовать подтверждения публичных сообщений"
+
+#: src/fchat.c:146
+msgid "Allow beep"
+msgstr ""
+
+#: src/fchat.c:152
+msgid "Deny"
+msgstr ""
+
+#: src/fchat.c:156
+msgid "Request"
+msgstr ""
+
+#: src/fchat.c:160
+msgid "Allow"
+msgstr ""
+
+#: src/fchat.c:164
+msgid "Buddy list privacy"
+msgstr ""
+
+#: src/info.c:127
+#: src/info.c:248
+msgid "Full name"
+msgstr ""
+
+#: src/info.c:131
+#: src/info.c:141
+#: src/info.c:254
+msgid "Male"
+msgstr ""
+
+#: src/info.c:134
+#: src/info.c:253
+msgid "Female"
+msgstr ""
+
+#: src/info.c:146
+msgid "Birthday"
+msgstr ""
+
+#: src/info.c:149
+#: src/info.c:288
+msgid "Address"
+msgstr ""
+
+#: src/info.c:150
+#: src/info.c:291
+msgid "Phone"
+msgstr ""
+
+#: src/info.c:151
+msgid "Email"
+msgstr ""
+
+#: src/info.c:152
+#: src/info.c:297
+msgid "Interest"
+msgstr "Интересы"
+
+#: src/info.c:153
+#: src/info.c:300
+msgid "Additional"
+msgstr "Дополнительно"
+
+#: src/info.c:251
+msgid "Sex"
+msgstr "Пол"
+
+#: src/info.c:252
+msgid "Not specified"
+msgstr "Не указано"
+
+#: src/info.c:257
+msgid "Birthday day"
+msgstr "День рождения"
+
+#: src/info.c:268
+msgid "Birthday month"
+msgstr "Месяц"
+
+#: src/info.c:277
+msgid "Birthday year"
+msgstr "Год"
+
+#: src/info.c:294
+msgid "E-mail"
+msgstr "электронная почта"
+
+#: src/info.c:303
+msgid "Edit info"
+msgstr "Редактировать инфо"
+
+#: src/info.c:304
+msgid "Edit your personal information"
+msgstr "Редактирование вашей личной информции о себе"
+
+#: src/info.c:305
+msgid "All items below are optional. Enter only the information with which you feel comfortable."
+msgstr "Все пункты ниже опциональны"
+
+#: src/process_cmds.c:93
+msgid "Beep received"
+msgstr "Сигнал получен"
+
+#: src/process_cmds.c:95
+msgid "Signal from you is denied"
+msgstr "Сингалы от вас не принимаются"
+
+#: src/process_cmds.c:97
+msgid "Signals are denied"
+msgstr "Сигнали не принимаются вообще"
+
+#: src/process_cmds.c:167
+msgid "Board message"
+msgstr "Объявление"
+
+#: src/process_cmds.c:208
+#, c-format
+msgid "%s buddy list"
+msgstr "Список собеседников %s"
+
+#: src/process_cmds.c:221
+#, c-format
+msgid "%s request your buddy list"
+msgstr ""
+
+#: src/status.c:24
+msgid "Message"
+msgstr "Сообщение"
+

@@ -1,0 +1,6 @@
+fchat (0.8-2) karmic; urgency=low
+
+  * Initial release
+  * Removed 'sudo' from Makefile budy
+
+ -- Sergey Ponomarev <stokito@gmail.com>  Sun, 10 Jan 2010 20:59:28 +0200
