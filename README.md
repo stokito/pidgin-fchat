@@ -1,5 +1,5 @@
 # FChat protocol plugin for libpurple
-![]/ico/fchat48.png
+![](/ico/fchat48.png)
 
 This project is an a reanimation of FChat - one of the famous p2p chat programs for local networks. Original FChat was with support of IRC protocol and itself FChat protocol based on UDP datagrams.
 FChat plugin for libpurple.
