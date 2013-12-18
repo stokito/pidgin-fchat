@@ -1,12 +1,13 @@
-# FChat protocol plugin for libpurple
+# FChat protocol plugin for libpurple (Pidgin)
 ![](/ico/fchat48.png)
+![](http://pidgin.im/shared/img/logo.text.jpg)
 
-This project is an a reanimation of FChat - one of the famous p2p chat programs for local networks. Original FChat was with support of IRC protocol and itself FChat protocol based on UDP datagrams.
-FChat plugin for libpurple.
+This project is an a reanimation of [FChat](http://www.kilievich.com/fchat/) - one of the famous p2p chat programs for local networks. Original FChat was with support of IRC protocol and itself FChat protocol based on UDP datagrams.
+The most important feature is that FChat not require dedicated server and it's fully p2p!
 
 
 [libpurple](https://developer.pidgin.im/wiki/WhatIsLibpurple) is a library intended to be used by programmers seeking to write an IM client that connects to many IM networks.
-libpurple is used by several messengers: Pidgin, Finch, Adium, Instantbird and Telepathy with haze.
+libpurple is used by several messengers: [Pidgin](http://pidgin.im/), Finch, Adium, Instantbird and Telepathy with haze.
 This package add FChat protocol support for libpurple.
 FChat is p2p chat program for local networks based on UDP protocol.
 Your IP will be used as ID. If you have several network interfaces you can use different IP for them.
