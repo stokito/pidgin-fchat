@@ -184,6 +184,7 @@ PurpleNotifyUserInfo *fchat_buddy_info_to_purple_info(FChatBuddyInfo *info);
 FChatBuddyInfo *fchat_parse_buddy_info(const gchar *str_info, const gchar *from_codeset);
 gchar *fchat_buddy_info_serialize(FChatBuddyInfo *, const gchar *from_codeset);
 FChatBuddyInfo *fchat_load_my_buddy_info(PurpleAccount *account);
+void fchat_load_buddy_list(FChatConnection *fchat_conn);
 void fchat_buddy_info_destroy(FChatBuddyInfo *info);
 
 const gchar *fchat_get_connection_codeset(FChatConnection *fchat_conn);

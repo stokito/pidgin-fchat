@@ -186,9 +186,8 @@ static PurplePluginInfo info = {
 	"0.92",                                               /* version */
 	N_("FChat protocol plugin"),                         /* summary */
 	N_("FChat protocol plugin"),                         /* description */
-//			"Ponomarev Sergey <http://sergey.ponomarev.name/>, Ponomarev Andrey
-	N_("Autors: Ponomarev brothers"),                    /* author */
-	"http://code.google.com/p/fchat",                    /* homepage */
+	N_("Sergey Ponomarev stokito.com"),                  /* author */
+	"https://github.com/stokito/fchat-pidgin",           /* homepage */
 	fchat_prpl_load,                                     /* load */
 	NULL,                                                /* unload */
 	NULL,                                                /* destroy */

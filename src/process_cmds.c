@@ -111,7 +111,7 @@ static void fchat_process_status_cmd(FChatConnection *fchat_conn, FChatBuddy *bu
 	g_return_if_fail(state_end_pos != NULL);
 
 	size_t state_len = state_end_pos - state_begin_pos;
-	if (state_len = 0)
+	if (state_len == 0)
 		return;
 
 	gchar *state = g_strndup(state_begin_pos, state_len);
@@ -328,7 +328,6 @@ void fchat_process_packet(FChatConnection *fchat_conn, const gchar *host, const 
 			packet_blocks = g_new0(FChatPacketBlocks, 1);
 			packet_blocks->command = command;
 			packet_blocks_v = (FChatPacketBlocksVector)packet_blocks;
-			block_num;
 			base2 = 1;
 			for (block_num = 1; block_num <= FCHAT_BLOCKS_COUNT; block_num++) {
 				if (fchat_msgs[i].blocks_to_parse & base2) {

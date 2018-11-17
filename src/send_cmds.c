@@ -28,7 +28,7 @@ GString *fchat_make_packet(FChatPacketBlocks *packet_blocks) {
 	return packet;
 }
 
-static fchat_reconnect(FChatConnection *fchat_conn, FChatBuddy *buddy) {
+static void fchat_reconnect(FChatConnection *fchat_conn, FChatBuddy *buddy) {
 	fchat_send_disconnect_cmd(fchat_conn, buddy);
 	fchat_send_connect_cmd(fchat_conn, buddy);
 }
