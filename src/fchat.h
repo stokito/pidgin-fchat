@@ -10,13 +10,14 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <glib.h>
+#include <glib/gprintf.h>
+
 #define GETTEXT_PACKAGE "fchat"
 #define LOCALEDIR "./locale"
 #include <glib/gi18n-lib.h>
 
-#include <glib.h>
-#include <glib/gprintf.h>
-#include <gnet.h>
+#include <gio/gio.h>
 #include <purple.h>
 
 #define FCHATPRPL_ID "prpl-fchat"
@@ -143,7 +144,7 @@ typedef struct {
 
 typedef struct {
 	gchar *host;
-	GInetAddr *addr;
+	GInetAddress *addr;
 	gchar *alias;
 	FChatBuddyInfo *info;
 	gint protocol_version;
@@ -154,12 +155,13 @@ typedef struct {
 typedef struct {
 	PurpleConnection *gc;
 	FChatBuddy *my_buddy;
-	GUdpSocket *socket;
+	GSocket *socket;
 	guint next_id;           /**< Next msg id required for confirmation */
 	guint timer;
 	gint keepalive_timeout;  /**< A purple timeout tag for the keepalive in minutes */
 	gint8 keepalive_periods;
 	GHashTable *buddies;
+	GIOChannel *channel;
 } FChatConnection;
 
 
@@ -172,7 +174,7 @@ gboolean fchat_keepalive(gpointer data);
 void fchat_prpl_add_buddy(PurpleConnection *gc, PurpleBuddy *buddy, PurpleGroup *group);
 void fchat_prpl_remove_buddy(PurpleConnection *gc, PurpleBuddy *buddy, PurpleGroup *group);
 
-FChatBuddy *fchat_buddy_new(const gchar *host, gint port);
+FChatBuddy *fchat_buddy_new(const gchar *host);
 FChatBuddy *fchat_find_buddy(FChatConnection *fchat_conn, const gchar *host, gboolean create);
 void fchat_buddy_delete(gpointer p);
 FChatBuddy **fchat_get_buddies_list_all(FChatConnection *fchat_conn);

@@ -134,7 +134,7 @@ static void fchat_init(PurplePlugin *plugin) {
 	option = purple_account_option_int_new(_("Keepalive periods"), "keepalive_periods", 3);
 	prpl_info.protocol_options = g_list_append(prpl_info.protocol_options, option);
 
-	option = purple_account_option_bool_new(_("Require authorization"), "require_authorization", FALSE);
+	option = purple_account_option_bool_new(_("Require authorization for new contacts"), "require_authorization", FALSE);
 	prpl_info.protocol_options = g_list_append(prpl_info.protocol_options, option);
 
 	option = purple_account_option_bool_new(_("Confirm private messages"), "confirm_private_msg", TRUE);
@@ -168,7 +168,6 @@ static void fchat_init(PurplePlugin *plugin) {
 }
 
 gboolean fchat_prpl_load(PurplePlugin *plugin) {
-	gnet_init();
 	return TRUE;
 }
 
@@ -183,7 +182,7 @@ static PurplePluginInfo info = {
 	PURPLE_PRIORITY_DEFAULT,                             /* priority */
 	FCHATPRPL_ID,                                        /* id */
 	"FChat",                                             /* name */
-	"0.92",                                               /* version */
+	"1.0",                                               /* version */
 	N_("FChat protocol plugin"),                         /* summary */
 	N_("FChat protocol plugin"),                         /* description */
 	N_("Sergey Ponomarev stokito.com"),                  /* author */

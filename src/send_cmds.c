@@ -1,27 +1,30 @@
 #include "fchat.h"
 
 void fchat_send_packet(FChatConnection *fchat_conn, FChatBuddy *buddy, FChatPacketBlocks *packet_blocks) {
+	guint16 port = (guint16) purple_account_get_int(fchat_conn->gc->account, "port", FCHAT_DEFAULT_PORT);
+	GSocketAddress *address = g_inet_socket_address_new(buddy->addr, port);
 	GString *str = fchat_make_packet(packet_blocks);
 	purple_debug_info("fchat", "Send packet to %s\n", buddy->host);
 	fchat_debug_print_packet_blocks(fchat_conn, packet_blocks);
-	gint not_sended = gnet_udp_socket_send(fchat_conn->socket, str->str, str->len, buddy->addr);
-	if (not_sended) {
-		purple_debug_error("fchat", "Can't send packet to %s\n", buddy->host);
+	GError *err = NULL;
+	gssize sent = g_socket_send_to(fchat_conn->socket, address, str->str, str->len, NULL, &err);
+	if (err) {
+		purple_debug_error("fchat", "Error on sending a packet to %s :%s\n", buddy->host, err->message);
+	} else if (sent < str->len) {
+		purple_debug_error("fchat", "Can't send a packet to %s\n", buddy->host);
 	}
 	g_string_free(str, TRUE);
 }
 
 GString *fchat_make_packet(FChatPacketBlocks *packet_blocks) {
 	GString *packet = g_string_new("");
-
 	FChatPacketBlocksVector packet_blocks_v = (FChatPacketBlocksVector)packet_blocks;
-	int block_num;
-	for (block_num = 0; block_num <= FCHAT_BLOCKS_COUNT; block_num++) {
-		gchar *block_value = packet_blocks_v[block_num];
-		gchar block_key = fchat_blocks_order[block_num];
-		if (block_value != NULL) {
-			g_string_append_c(packet, FCHAT_SEPARATOR_BLOCK);
-			g_string_append_c(packet, block_key);
+	for (int block_num = 0; block_num < FCHAT_BLOCKS_COUNT; block_num++) {
+		const gchar *block_value = packet_blocks_v[block_num];
+		if (block_value) {
+			g_string_append_c_inline(packet, (gchar)FCHAT_SEPARATOR_BLOCK);
+			const gchar block_key = fchat_blocks_order[block_num];
+			g_string_append_c_inline(packet, block_key);
 			g_string_append(packet, block_value);
 		}
 	}

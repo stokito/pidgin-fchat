@@ -1,11 +1,11 @@
 #include "fchat.h"
 
-FChatBuddy *fchat_buddy_new(const gchar *host, gint port) {
+FChatBuddy *fchat_buddy_new(const gchar *host) {
 	FChatBuddy *buddy = g_new0(FChatBuddy, 1);
 	buddy->host = g_strdup(host);
-	buddy->addr = gnet_inetaddr_new(host, port);
-	if (buddy->addr == NULL) {
-		purple_debug_error("fchat", "Incorrect address %s:%d\n", host, port);
+	buddy->addr = g_inet_address_new_from_string(host);
+	if (!buddy->addr) {
+		purple_debug_error("fchat", "Incorrect address %s\n", host);
 	}
 	return buddy;
 }
@@ -13,9 +13,8 @@ FChatBuddy *fchat_buddy_new(const gchar *host, gint port) {
 FChatBuddy *fchat_find_buddy(FChatConnection *fchat_conn, const gchar *host, gboolean create_if_not_exists) {
 	FChatBuddy *buddy = NULL;
 	buddy = g_hash_table_lookup(fchat_conn->buddies, host);
-	if ((buddy == NULL) && create_if_not_exists) {
-		gint port = purple_account_get_int(fchat_conn->gc->account, "port", FCHAT_DEFAULT_PORT);
-		buddy = fchat_buddy_new(host, port);
+	if (!buddy && create_if_not_exists) {
+		buddy = fchat_buddy_new(host);
 		g_hash_table_insert(fchat_conn->buddies, g_strdup(host), buddy);
 	}
 	return buddy;
@@ -23,14 +22,14 @@ FChatBuddy *fchat_find_buddy(FChatConnection *fchat_conn, const gchar *host, gbo
 
 void fchat_buddy_delete(gpointer p) {
 	FChatBuddy *buddy = p;
-	if (buddy->host != NULL)
+	if (buddy->host)
 		g_free(buddy->host);
-	if (buddy->alias != NULL)
+	if (buddy->alias)
 		g_free(buddy->alias);
-	if (buddy->info != NULL)
+	if (buddy->info)
 		fchat_buddy_info_destroy(buddy->info);
-	if (buddy->addr != NULL)
-		gnet_inetaddr_delete(buddy->addr);
+	if (buddy->addr)
+		g_clear_object(&buddy->addr);
 	g_free(buddy);
 }
 
@@ -47,12 +46,11 @@ void fchat_request_authorization_deny_cb(void *user_data) {
 }
 
 void fchat_load_buddy_list(FChatConnection *fchat_conn) {
-	gint port = purple_account_get_int(fchat_conn->gc->account, "port", FCHAT_DEFAULT_PORT);
 	GSList *buddies, *l;
 	buddies = purple_find_buddies(fchat_conn->gc->account, NULL);
 	for(l = buddies; l; l = l->next) {
 		PurpleBuddy *buddy = (PurpleBuddy *)l->data;
-		FChatBuddy *fchat_buddy = fchat_buddy_new(buddy->name, port);
+		FChatBuddy *fchat_buddy = fchat_buddy_new(buddy->name);
 		g_hash_table_insert(fchat_conn->buddies, g_strdup(buddy->name), fchat_buddy);
 	}
 	g_slist_free(buddies);

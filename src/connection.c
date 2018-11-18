@@ -2,7 +2,7 @@
 
 const gchar *fchat_get_connection_codeset(FChatConnection *fchat_conn) {
 	const gchar *codeset = purple_account_get_string(fchat_conn->gc->account, "codeset", NULL);
-	if (codeset == NULL) {
+	if (!codeset) {
 		g_get_charset(&codeset);
 	}
 	return codeset;
@@ -33,30 +33,34 @@ gchar *fchat_decode(FChatConnection *fchat_conn, const gchar *str, gssize len) {
 static gboolean fchat_receive_packet(GIOChannel *iochannel, GIOCondition c, gpointer data) {
 	/**
 	 * Это функция вызывается когда в канал сокета приходит пакет.
-	 * По идее мы берём и забираем из канала пришедшие байты.
+	 * По идее мы берём и забираем из канала пришедшие байты:
+	 * g_io_channel_read_chars(iochannel, buffer, sizeof (buffer), &bytes_received, &error);
 	 * Но беда в том что нам нужен айпишник приславшего пакет.
 	 * Поэтому выбирать мы будем не через абстрактный канал, а прямо из сокета.
 	 */
 	FChatConnection *fchat_conn = (FChatConnection *)data;
 	gchar buffer[1024];
-	GInetAddr *sender = NULL;
-	gint bytes_received = gnet_udp_socket_receive(fchat_conn->socket, buffer, sizeof(buffer), &sender);
-	if (bytes_received == -1) {
-		purple_debug_error("fchat", "fchat_receive_packet: bytes_received=%d\n", bytes_received);
-		if (sender)
-			gnet_inetaddr_delete(sender);
+	GError *error = NULL;
+	GSocketAddress *address = NULL;
+	gssize bytes_received = g_socket_receive_from(fchat_conn->socket, &address, buffer, sizeof(buffer), NULL, &error);
+	if (bytes_received <= 0) {
+		purple_debug_error("fchat", "fchat_receive_packet: bytes_received=%ld\n", bytes_received);
+		g_clear_object(&address);
 		return TRUE;
 	}
-	gchar *packet = g_strndup(buffer, bytes_received);
-	gchar *host = gnet_inetaddr_get_canonical_name(sender);
+	GInetSocketAddress *sender = G_INET_SOCKET_ADDRESS(address);
+	gchar *packet = g_strndup(buffer, (gsize) bytes_received);
+	gchar *host = g_inet_address_to_string(g_inet_socket_address_get_address(sender));
 	fchat_process_packet(fchat_conn, host, packet);
 	g_free(packet);
 	g_free(host);
+	g_clear_object(&sender);
 	return TRUE;
 }
 
 static gboolean fchat_receive_packet_error(GIOChannel *iochannel, GIOCondition c, gpointer data) {
 	purple_debug_warning("fchat", "fchat_receive_packet_error: GIOCondition c=%d\n", c);
+	return FALSE;
 }
 
 static void func_send_connects(gpointer key, gpointer value, gpointer user_data) {
@@ -68,10 +72,10 @@ void fchat_prpl_login(PurpleAccount *account) {
 	FChatConnection *fchat_conn = gc->proto_data = g_new0(FChatConnection, 1);
 	fchat_conn->gc = gc;
 
-	gint port = purple_account_get_int(fchat_conn->gc->account, "port", FCHAT_DEFAULT_PORT);
+	guint16 port = (guint16) purple_account_get_int(fchat_conn->gc->account, "port", FCHAT_DEFAULT_PORT);
 	gchar *host = account->username;
-	fchat_conn->my_buddy = fchat_buddy_new(host, port);
-	if (fchat_conn->my_buddy->addr == NULL) {
+	fchat_conn->my_buddy = fchat_buddy_new(host);
+	if (!fchat_conn->my_buddy->addr) {
 		purple_connection_error_reason(gc, PURPLE_CONNECTION_ERROR_NETWORK_ERROR, _("Incorrect address"));
 		return;
 	}
@@ -80,29 +84,48 @@ void fchat_prpl_login(PurpleAccount *account) {
 	fchat_conn->my_buddy->info = fchat_load_my_buddy_info(account);
 
 	// Создаём сокет на заданом в настроках айпишнике и порте
-	fchat_conn->socket = gnet_udp_socket_new_full(fchat_conn->my_buddy->addr, port);
-	if (fchat_conn->socket != NULL) {
+	GError *error = NULL;
+	fchat_conn->socket = g_socket_new(G_SOCKET_FAMILY_IPV4, G_SOCKET_TYPE_DATAGRAM, G_SOCKET_PROTOCOL_UDP, &error);
+	if (fchat_conn->socket) {
 		purple_connection_set_state(gc, PURPLE_CONNECTING);
 	} else {
 		purple_connection_error_reason(gc, PURPLE_CONNECTION_ERROR_NETWORK_ERROR, _("Couldn't create UDP socket"));
+		purple_debug_warning("fchat", "Couldn't create UDP socket (%d): %s", port, error->message);
+		g_clear_error(&error);
 		return;
 	}
-	GIOChannel* iochannel = gnet_udp_socket_get_io_channel(fchat_conn->socket);
-	g_io_add_watch(iochannel, G_IO_IN | G_IO_PRI, fchat_receive_packet, fchat_conn);
+
+//	GSocketAddress *socket_address = g_inet_socket_address_new(g_inet_address_new_any(G_SOCKET_FAMILY_IPV4), port);
+	GSocketAddress *socket_address = G_SOCKET_ADDRESS(g_inet_socket_address_new(fchat_conn->my_buddy->addr, port));
+	if (!socket_address) {
+		purple_connection_error_reason(gc, PURPLE_CONNECTION_ERROR_NETWORK_ERROR, _("Socket addr is incorrect"));
+	}
+	if (g_socket_bind(fchat_conn->socket, socket_address, TRUE, &error) == FALSE) {
+		purple_connection_error_reason(gc, PURPLE_CONNECTION_ERROR_NETWORK_ERROR, _("Error bind"));
+		purple_debug_warning("fchat", "Couldn't bind UDP socket (%d): %s", port, error->message);
+		g_clear_error(&error);
+		return;
+	}
+
+	int fd = g_socket_get_fd(fchat_conn->socket);
+	fchat_conn->channel = g_io_channel_unix_new(fd);
+	g_io_channel_set_close_on_unref(fchat_conn->channel, TRUE);
+
+	g_io_add_watch(fchat_conn->channel, G_IO_IN | G_IO_PRI, (GIOFunc) fchat_receive_packet, fchat_conn);
 	// G_IO_NVAL мы не перехватываем поскольку когда удаляетя сокет дискриптор закрывается а потом он ещё закрываетя через канал и мы отхватываем ошибку
-	g_io_add_watch(iochannel, G_IO_ERR | G_IO_HUP, fchat_receive_packet_error, fchat_conn);
+	g_io_add_watch(fchat_conn->channel, G_IO_ERR | G_IO_HUP, (GIOFunc) fchat_receive_packet_error, fchat_conn);
 	fchat_conn->next_id = 0;
 
 	fchat_conn->buddies = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, fchat_buddy_delete);
 	fchat_load_buddy_list(fchat_conn);
 
-	fchat_conn->keepalive_periods = purple_account_get_int(gc->account, "keepalive_periods", 3);
-	fchat_conn->keepalive_timeout = purple_account_get_int(gc->account, "keepalive_timeout", 1);;
-	fchat_conn->timer = purple_timeout_add_seconds(fchat_conn->keepalive_timeout * 60, fchat_keepalive, fchat_conn);
+	fchat_conn->keepalive_periods = (gint8) purple_account_get_int(gc->account, "keepalive_periods", 3);
+	fchat_conn->keepalive_timeout = purple_account_get_int(gc->account, "keepalive_timeout", 1);
+	fchat_conn->timer = purple_timeout_add_seconds((guint) (fchat_conn->keepalive_timeout * 60), fchat_keepalive, fchat_conn);
 
 	// tell purple about everyone on our buddy list who's connected
 	if (purple_account_get_bool(account, "broadcast", TRUE)) {
-		FChatBuddy *broadcast_buddy = fchat_buddy_new("255.255.255.255", port);
+		FChatBuddy *broadcast_buddy = fchat_buddy_new("255.255.255.255");
 		fchat_send_connect_cmd(fchat_conn, broadcast_buddy);
 		fchat_buddy_delete(broadcast_buddy);
 	} else {
@@ -119,7 +142,7 @@ static void func_send_disconnects(gpointer key, gpointer value, gpointer user_da
 void fchat_prpl_close(PurpleConnection *gc) {
 	FChatConnection *fchat_conn = gc->proto_data;
 	g_return_if_fail(fchat_conn != NULL);
-	// notify other buddy
+	// notify other buddies
 	g_hash_table_foreach(fchat_conn->buddies, func_send_disconnects, fchat_conn);
 	fchat_connection_delete(fchat_conn);
 }
@@ -127,7 +150,7 @@ void fchat_prpl_close(PurpleConnection *gc) {
 gboolean fchat_keepalive(gpointer data) {
 	FChatConnection *fchat_conn = data;
 	purple_debug_warning("fchat", "fchat_prpl_keepalive %d %d\n", fchat_conn->keepalive_timeout, fchat_conn->keepalive_periods);
-	fchat_conn->timer = purple_timeout_add_seconds(fchat_conn->keepalive_timeout * 60, fchat_keepalive, fchat_conn);
+	fchat_conn->timer = purple_timeout_add_seconds((guint) (fchat_conn->keepalive_timeout * 60), fchat_keepalive, fchat_conn);
 
 	GHashTableIter iter;
 	gchar *buddy_host;
@@ -146,8 +169,8 @@ gboolean fchat_keepalive(gpointer data) {
 void fchat_connection_delete(FChatConnection *fchat_conn) {
 	if (fchat_conn->timer)
 		purple_timeout_remove(fchat_conn->timer);
-	if (fchat_conn->socket)
-		gnet_udp_socket_delete(fchat_conn->socket);
+	g_clear_object(&fchat_conn->socket);
+	g_io_channel_unref(fchat_conn->channel);
 	if (fchat_conn->buddies)
 		g_hash_table_destroy(fchat_conn->buddies);
 	if (fchat_conn->my_buddy)
@@ -157,10 +180,8 @@ void fchat_connection_delete(FChatConnection *fchat_conn) {
 
 void fchat_delete_packet_blocks(FChatPacketBlocks *packet_blocks) {
 	FChatPacketBlocksVector packet_blocks_v = (FChatPacketBlocksVector)packet_blocks;
-	gchar *block;
-	int block_num;
-	for (block_num = 0; block_num <= FCHAT_BLOCKS_COUNT; block_num++) {
-		block = packet_blocks_v[block_num];
+	for (int block_num = 0; block_num < FCHAT_BLOCKS_COUNT; block_num++) {
+		gchar *block = packet_blocks_v[block_num];
 		if (block)
 			g_free(block);
 	}
