@@ -13,7 +13,7 @@ static void fchat_process_connect_cmd(FChatConnection *fchat_conn, FChatBuddy *b
 	}
 
 	/* Если собеседник уже в контакт листе... */
-	if (purple_find_buddy(fchat_conn->gc->account, buddy->host) != NULL) {
+	if (purple_find_buddy(fchat_conn->gc->account, buddy->host)) {
 		fchat_send_connect_confirm_cmd(fchat_conn, buddy, TRUE);
 		purple_prpl_got_user_status(fchat_conn->gc->account, buddy->host, FCHAT_STATUS_ONLINE, NULL);
 	} else if (purple_account_get_bool(fchat_conn->gc->account, "require_authorization", FALSE)) {
@@ -52,7 +52,7 @@ static void fchat_process_msg_cmd(FChatConnection *fchat_conn, FChatBuddy *buddy
 		serv_got_chat_in(fchat_conn->gc, FCHAT_CHAT_ROOM_ID, buddy->host, PURPLE_MESSAGE_RECV, msg, time(NULL));
 		g_free(msg);
 	}
-	if (packet_blocks->msg_confirmation != NULL) {
+	if (packet_blocks->msg_confirmation) {
 		fchat_send_confirm_msg_cmd(fchat_conn, buddy, packet_blocks->msg_id);
 	}
 }
@@ -63,7 +63,7 @@ static void fchat_process_private_msg_cmd(FChatConnection *fchat_conn, FChatBudd
 		serv_got_im(fchat_conn->gc, buddy->host, msg, PURPLE_MESSAGE_RECV, time(NULL));
 		g_free(msg);
 	}
-	if (packet_blocks->msg_confirmation != NULL) {
+	if (packet_blocks->msg_confirmation) {
 		fchat_send_confirm_msg_cmd(fchat_conn, buddy, packet_blocks->msg_id);
 	}
 }
@@ -89,7 +89,7 @@ static void fchat_process_beep_cmd(FChatConnection *fchat_conn, FChatBuddy *budd
 
 static void fchat_process_beep_reply_cmd(FChatConnection *fchat_conn, FChatBuddy *buddy, FChatPacketBlocks *packet_blocks) {
 	const gchar *msg;
-	if (packet_blocks->msg == NULL) {
+	if (!packet_blocks->msg) {
 		msg = _("Beep received");             /* BEEP_ACEPTED Собеседник получил сигнал */
 	} else if (packet_blocks->msg[0] == '0') {
 		msg = _("Signal from you is denied"); /* BEEP_DENYED_FROM_YOU */
@@ -197,7 +197,7 @@ static void fchat_process_buddy_list_cmd(FChatConnection *fchat_conn, FChatBuddy
 		p++;
 		host = *p;
 		if (host) {
-			contact_buddy = fchat_buddy_new(host, FCHAT_DEFAULT_PORT);
+			contact_buddy = fchat_buddy_new(host);
 			contact_buddy->alias = g_strdup(alias);
 			g_hash_table_insert(buddies, host, contact_buddy);
 			p++;
@@ -205,7 +205,7 @@ static void fchat_process_buddy_list_cmd(FChatConnection *fchat_conn, FChatBuddy
 		purple_debug_info("fchat", "fchat_process_buddy_list_cmd:\nhost=%s alias=%s\n", host, alias);
 	}
 	g_strfreev(buddies_v);
-	fchat_select_buddies_list(fchat_conn, _("%s buddy list"), buddies,
+	fchat_select_buddies_list(fchat_conn, _("Buddy list"), buddies,
 		fchat_select_buddies_list_to_add_cb, NULL, buddy);
 	g_hash_table_destroy(buddies);
 }
@@ -283,7 +283,7 @@ static gchar *fchat_get_block_content(const gchar block_key, const gchar *packet
 	text_block_begin = strstr(packet, needle);
 
 	if (block_key == (gchar)FCHAT_MSG_BLOCK) {
-		if (text_block_begin == NULL) {
+		if (!text_block_begin) {
 			return NULL;
 		} else {
 			/* Смещаем указатель на два символа вперёд */
@@ -294,12 +294,12 @@ static gchar *fchat_get_block_content(const gchar block_key, const gchar *packet
 		needle[1] = block_key;
 		gchar *begin_pos = strstr(packet, needle);
 		/* Если блок не найден или находится в тексте */
-		if ((begin_pos == NULL) || ((text_block_begin != NULL) && (begin_pos >= text_block_begin))) {
+		if (!begin_pos || (text_block_begin && (begin_pos >= text_block_begin))) {
 			return NULL;
 		} else {
 			begin_pos += 2;
 			gchar *end_pos = strchr(begin_pos, (gchar)FCHAT_SEPARATOR_BLOCK);
-			if (end_pos == NULL) {
+			if (!end_pos) {
 				return g_strdup(begin_pos);
 			} else {
 				return g_strndup(begin_pos, end_pos - begin_pos);
@@ -311,25 +311,20 @@ static gchar *fchat_get_block_content(const gchar block_key, const gchar *packet
 void fchat_process_packet(FChatConnection *fchat_conn, const gchar *host, const gchar *packet) {
 	/* Команда обязательна. Если её нет - пакет битый или он для другой проги */
 	gchar *command = fchat_get_block_content((gchar)FCHAT_COMMAND_BLOCK, packet);
-	if ((command == NULL) || (*command == '\0')) {
+	if (!command || (*command == '\0')) {
 		purple_debug_warning("fchat", "Bad packet from host %s. There is not command in packet\n", host);
 		return;
 	}
 
 	/* Вызываем обработчик этой команды */
-	gint i;
-	FChatPacketBlocks *packet_blocks;
-	FChatPacketBlocksVector packet_blocks_v;
-	int block_num;
-	int base2;
-	for (i = 0; fchat_msgs[i].command; i++) {
+	for (gint i = 0; fchat_msgs[i].command; i++) {
 		if (fchat_msgs[i].command == command[0]) {
 			/* Extract blocks */
-			packet_blocks = g_new0(FChatPacketBlocks, 1);
+			FChatPacketBlocks *packet_blocks = g_new0(FChatPacketBlocks, 1);
 			packet_blocks->command = command;
-			packet_blocks_v = (FChatPacketBlocksVector)packet_blocks;
-			base2 = 1;
-			for (block_num = 1; block_num <= FCHAT_BLOCKS_COUNT; block_num++) {
+			FChatPacketBlocksVector packet_blocks_v = (FChatPacketBlocksVector)packet_blocks;
+			int base2 = 1;
+			for (int block_num = 1; block_num < FCHAT_BLOCKS_COUNT; block_num++) {
 				if (fchat_msgs[i].blocks_to_parse & base2) {
 					packet_blocks_v[block_num] = fchat_get_block_content(fchat_blocks_order[block_num], packet);
 				}
