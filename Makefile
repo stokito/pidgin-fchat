@@ -4,16 +4,25 @@ SYSTEM_CFLAGS = -I/usr/include -I/usr/local/include
 DEB_PACKAGE_DIR = ./debdir
 SRCDIR=./src
 FCHAT_SOURCES = \
-	${SRCDIR}/*.h \
-	${SRCDIR}/*.c \
+	${SRCDIR}/actions.c \
+	${SRCDIR}/attention.c \
+	${SRCDIR}/buddy.c \
+	${SRCDIR}/chat.c \
+	${SRCDIR}/connection.c \
+	${SRCDIR}/fchat.c \
+	${SRCDIR}/fchat.h \
+	${SRCDIR}/info.c \
+	${SRCDIR}/process_cmds.c \
+	${SRCDIR}/send_cmds.c \
+	${SRCDIR}/status.c \
 
 #Standard stuff here
-.PHONY:	all clean install uninstall locale dist
+.PHONY:	all clean install uninstall getpot locale dist
 
 #all:	clean libfchat.so dist sourcepackage
 all:	clean libfchat.so
 
-install:	libfchat.so
+install:	libfchat.so locale
 #	cp libfchat.so ~/.purple/plugins/
 #	mkdir --mode=664 --parents ${DESTDIR}/usr/lib/purple-2/
 	mkdir --parents ${DESTDIR}/usr/lib/purple-2/
@@ -47,14 +56,18 @@ uninstall:
 	rm -f ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 
 libfchat.so:	${FCHAT_SOURCES}
-	${CC} ${SYSTEM_CFLAGS} $$(pkg-config --libs --cflags glib-2.0 gnet-2.0 purple) ${FCHAT_SOURCES} -o libfchat.so -shared -fPIC -DPIC
+	${CC} ${SYSTEM_CFLAGS} $$(pkg-config --libs --cflags glib-2.0 purple) ${FCHAT_SOURCES} -o libfchat.so -shared -fPIC -DPIC
 
 clean:
 	rm -f libfchat.so prpl-fchat-source.tar.bz2
 	rm -rf prpl-fchat
 
-locale:
+pot:
 	xgettext --package-name=fchat -k_ -o ./po/fchat.pot ${FCHAT_SOURCES}
+
+locale:
+	mkdir -p ./locale/ru/LC_MESSAGES/
+	msgfmt -o ./locale/ru/LC_MESSAGES/fchat.mo ./po/ru.po
 
 dist:	${FCHAT_SOURCES} Makefile ../ico/fchat16.png ../ico/fchat22.png ../ico/fchat48.png
 	tar -cf tmp.tar $^
