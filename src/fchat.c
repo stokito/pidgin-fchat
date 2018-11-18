@@ -28,7 +28,7 @@ static const gchar *fchat_prpl_list_icon(PurpleAccount *account, PurpleBuddy *bu
 
 static gint fchat_prpl_send_im(PurpleConnection *gc, const gchar *who, const gchar *message, PurpleMessageFlags flags) {
 	FChatConnection *fchat_conn = (FChatConnection *)gc->proto_data;
-	FChatBuddy *buddy = fchat_find_buddy(fchat_conn, who, TRUE);
+	FChatBuddy *buddy = fchat_find_buddy(fchat_conn, who, NULL, TRUE);
 	gboolean msg_confirmation = purple_account_get_bool(gc->account, "confirm_private_msg", TRUE);
 	fchat_send_msg_cmd(fchat_conn, buddy, message, FCHAT_MSG_TYPE_PRIVATE, msg_confirmation);
 	return 1;

@@ -3,7 +3,7 @@
 gboolean fchat_prpl_send_attention(PurpleConnection *gc, const gchar *username, guint type) {
 	g_return_val_if_fail(type == 0, FALSE);
 	FChatConnection *fchat_conn = (FChatConnection *)gc->proto_data;
-	FChatBuddy *fchat_buddy = fchat_find_buddy(fchat_conn, username, FALSE);
+	FChatBuddy *fchat_buddy = fchat_find_buddy(fchat_conn, username, NULL, FALSE);
 	fchat_send_beep_cmd(fchat_conn, fchat_buddy);
 	return FALSE;
 }

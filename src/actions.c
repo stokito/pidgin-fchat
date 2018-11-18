@@ -43,14 +43,14 @@ static void blist_action_beep(PurpleBlistNode *node, gpointer userdata) {
 static void blist_action_get_msg_board(PurpleBlistNode *node, gpointer userdata) {
 	PurpleBuddy *purple_buddy = (PurpleBuddy *)node;
 	FChatConnection *fchat_conn = (FChatConnection *)purple_buddy->account->gc->proto_data;
-	FChatBuddy *fchat_buddy = fchat_find_buddy(fchat_conn, purple_buddy->name, FALSE);
+	FChatBuddy *fchat_buddy = fchat_find_buddy(fchat_conn, purple_buddy->name, NULL, FALSE);
 	fchat_send_get_msg_board_cmd(fchat_conn, fchat_buddy);
 }
 
 static void blist_action_get_buddies(PurpleBlistNode *node, gpointer userdata) {
 	PurpleBuddy *purple_buddy = (PurpleBuddy *)node;
 	FChatConnection *fchat_conn = (FChatConnection *)purple_buddy->account->gc->proto_data;
-	FChatBuddy *fchat_buddy = fchat_find_buddy(fchat_conn, purple_buddy->name, FALSE);
+	FChatBuddy *fchat_buddy = fchat_find_buddy(fchat_conn, purple_buddy->name, NULL, FALSE);
 	fchat_send_get_buddies(fchat_conn, fchat_buddy);
 }
 

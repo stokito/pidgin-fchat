@@ -1,20 +1,28 @@
 #include "fchat.h"
 
-FChatBuddy *fchat_buddy_new(const gchar *host) {
+FChatBuddy *fchat_buddy_new(const gchar *host, const gchar *alias) {
 	FChatBuddy *buddy = g_new0(FChatBuddy, 1);
 	buddy->host = g_strdup(host);
 	buddy->addr = g_inet_address_new_from_string(host);
 	if (!buddy->addr) {
 		purple_debug_error("fchat", "Incorrect address %s\n", host);
 	}
+	buddy->alias = alias ? g_strdup(alias) : NULL;
 	return buddy;
 }
 
-FChatBuddy *fchat_find_buddy(FChatConnection *fchat_conn, const gchar *host, gboolean create_if_not_exists) {
+/**
+ * Find a FchatBuddy by host/ip.
+ * @param host hostname/ip address
+ * @param create_if_not_exists If create_if_not_exists then it will be created and stored with alias.
+ * @param alias alias (nickname). Needed only if create_if_not_exists so use NULL in other cases
+ * @return
+ */
+FChatBuddy *fchat_find_buddy(FChatConnection *fchat_conn, const gchar *host, const gchar *alias, gboolean create_if_not_exists) {
 	FChatBuddy *buddy = NULL;
 	buddy = g_hash_table_lookup(fchat_conn->buddies, host);
 	if (!buddy && create_if_not_exists) {
-		buddy = fchat_buddy_new(host);
+		buddy = fchat_buddy_new(host, alias);
 		g_hash_table_insert(fchat_conn->buddies, g_strdup(host), buddy);
 	}
 	return buddy;
@@ -46,11 +54,10 @@ void fchat_request_authorization_deny_cb(void *user_data) {
 }
 
 void fchat_load_buddy_list(FChatConnection *fchat_conn) {
-	GSList *buddies, *l;
-	buddies = purple_find_buddies(fchat_conn->gc->account, NULL);
-	for(l = buddies; l; l = l->next) {
+	GSList *buddies = purple_find_buddies(fchat_conn->gc->account, NULL);
+	for(GSList *l = buddies; l; l = l->next) {
 		PurpleBuddy *buddy = (PurpleBuddy *)l->data;
-		FChatBuddy *fchat_buddy = fchat_buddy_new(buddy->name);
+		FChatBuddy *fchat_buddy = fchat_buddy_new(buddy->name, buddy->alias);
 		g_hash_table_insert(fchat_conn->buddies, g_strdup(buddy->name), fchat_buddy);
 	}
 	g_slist_free(buddies);
@@ -58,7 +65,7 @@ void fchat_load_buddy_list(FChatConnection *fchat_conn) {
 
 void fchat_prpl_add_buddy(PurpleConnection *gc, PurpleBuddy *buddy, PurpleGroup *group) {
 	FChatConnection *fchat_conn = gc->proto_data;
-	FChatBuddy *fchat_buddy = fchat_find_buddy(fchat_conn, buddy->name, TRUE);
+	FChatBuddy *fchat_buddy = fchat_find_buddy(fchat_conn, buddy->name, buddy->alias, TRUE);
 	fchat_send_connect_cmd(fchat_conn, fchat_buddy);
 }
 

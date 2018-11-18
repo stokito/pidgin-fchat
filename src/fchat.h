@@ -118,9 +118,9 @@ typedef enum {
 } FChatMsgType;
 
 typedef enum {
-	FCHAT_BUDDIES_LIST_PRIVACY_DENY,
-	FCHAT_BUDDIES_LIST_PRIVACY_REQUEST,
-	FCHAT_BUDDIES_LIST_PRIVACY_ALLOW
+	FCHAT_BUDDIES_LIST_PRIVACY_REQUEST, // default
+	FCHAT_BUDDIES_LIST_PRIVACY_ALLOW,
+	FCHAT_BUDDIES_LIST_PRIVACY_DENY
 } FChatBuddiesListPrivacy;
 
 typedef enum {
@@ -174,8 +174,8 @@ gboolean fchat_keepalive(gpointer data);
 void fchat_prpl_add_buddy(PurpleConnection *gc, PurpleBuddy *buddy, PurpleGroup *group);
 void fchat_prpl_remove_buddy(PurpleConnection *gc, PurpleBuddy *buddy, PurpleGroup *group);
 
-FChatBuddy *fchat_buddy_new(const gchar *host);
-FChatBuddy *fchat_find_buddy(FChatConnection *fchat_conn, const gchar *host, gboolean create);
+FChatBuddy *fchat_buddy_new(const gchar *host, const gchar *alias);
+FChatBuddy *fchat_find_buddy(FChatConnection *fchat_conn, const gchar *host, const gchar *alias, gboolean create);
 void fchat_buddy_delete(gpointer p);
 FChatBuddy **fchat_get_buddies_list_all(FChatConnection *fchat_conn);
 

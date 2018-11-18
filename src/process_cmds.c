@@ -197,8 +197,7 @@ static void fchat_process_buddy_list_cmd(FChatConnection *fchat_conn, FChatBuddy
 		p++;
 		host = *p;
 		if (host) {
-			contact_buddy = fchat_buddy_new(host);
-			contact_buddy->alias = g_strdup(alias);
+			contact_buddy = fchat_buddy_new(host, alias);
 			g_hash_table_insert(buddies, host, contact_buddy);
 			p++;
 		}
@@ -331,7 +330,7 @@ void fchat_process_packet(FChatConnection *fchat_conn, const gchar *host, const 
 				base2 = base2 * 2;
 			}
 			fchat_debug_print_packet_blocks(fchat_conn, packet_blocks);
-			FChatBuddy *buddy = fchat_find_buddy(fchat_conn, host, TRUE);
+			FChatBuddy *buddy = fchat_find_buddy(fchat_conn, host, NULL, TRUE);
 			buddy->last_packet_time = time(NULL);
 			fchat_msgs[i].cb(fchat_conn, buddy, packet_blocks);
 			fchat_delete_packet_blocks(packet_blocks);

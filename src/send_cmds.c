@@ -276,7 +276,7 @@ void fchat_send_buddies(FChatConnection *fchat_conn, FChatBuddy *buddy, GHashTab
 		}
 		buddies_v[i] = NULL;
 		msg = g_strjoinv(FCHAT_BUDDY_LIST_SEPARATOR, buddies_v);
-		g_strfreev(buddies_v);
+		g_free(buddies_v);
 		purple_debug_info("fchat", "buddies_v=%s\n", msg);
 	} else {
 		msg = g_strdup("1");

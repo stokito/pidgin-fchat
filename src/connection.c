@@ -74,12 +74,11 @@ void fchat_prpl_login(PurpleAccount *account) {
 
 	guint16 port = (guint16) purple_account_get_int(fchat_conn->gc->account, "port", FCHAT_DEFAULT_PORT);
 	gchar *host = account->username;
-	fchat_conn->my_buddy = fchat_buddy_new(host);
+	fchat_conn->my_buddy = fchat_buddy_new(host, account->alias);
 	if (!fchat_conn->my_buddy->addr) {
 		purple_connection_error_reason(gc, PURPLE_CONNECTION_ERROR_NETWORK_ERROR, _("Incorrect address"));
 		return;
 	}
-	fchat_conn->my_buddy->alias = g_strdup(account->alias); // nick_name;
 	fchat_conn->my_buddy->protocol_version = FCHAT_MY_PROTOCOL_VERSION;
 	fchat_conn->my_buddy->info = fchat_load_my_buddy_info(account);
 
@@ -125,7 +124,7 @@ void fchat_prpl_login(PurpleAccount *account) {
 
 	// tell purple about everyone on our buddy list who's connected
 	if (purple_account_get_bool(account, "broadcast", TRUE)) {
-		FChatBuddy *broadcast_buddy = fchat_buddy_new("255.255.255.255");
+		FChatBuddy *broadcast_buddy = fchat_buddy_new("255.255.255.255", NULL);
 		fchat_send_connect_cmd(fchat_conn, broadcast_buddy);
 		fchat_buddy_delete(broadcast_buddy);
 	} else {

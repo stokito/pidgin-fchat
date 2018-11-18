@@ -355,6 +355,6 @@ void fchat_buddy_info_destroy(FChatBuddyInfo *info) {
 
 void fchat_prpl_get_info(PurpleConnection *gc, const gchar *who) {
 	FChatConnection *fchat_conn = gc->proto_data;
-	FChatBuddy *buddy = fchat_find_buddy(fchat_conn, who, TRUE);
+	FChatBuddy *buddy = fchat_find_buddy(fchat_conn, who, NULL, TRUE);
 	fchat_send_get_buddy_info_cmd(fchat_conn, buddy);
 }
