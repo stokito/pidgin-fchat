@@ -1,11 +1,9 @@
 #include "fchat.h"
 
 static gchar* extract_param(const gchar *from_codeset, const gchar *str_info, const gchar *key) {
-	gssize len;
 	gchar needle[32];
 	g_sprintf(needle, "%s%c", key, FCHAT_INFO_KEY_SEPARATOR);
-	gchar *begin_pos = NULL;
-	begin_pos = strstr(str_info, needle);
+	gchar *begin_pos = strstr(str_info, needle);
 	if (!begin_pos) {
 		return NULL;
 	}
@@ -13,7 +11,7 @@ static gchar* extract_param(const gchar *from_codeset, const gchar *str_info, co
 	begin_pos += strlen(key) + 1;
 	gchar *end_pos = NULL;
 	end_pos = strchr(begin_pos, FCHAT_INFO_KEY_SEPARATOR);
-	len = (end_pos == NULL) ? -1 : end_pos - begin_pos;
+	gsize len = end_pos ? end_pos - begin_pos : -1;
 
 	if (from_codeset) {
 		return g_convert(begin_pos, len, "UTF-8", from_codeset, NULL, NULL, NULL);
@@ -77,7 +75,7 @@ FChatBuddyInfo *fchat_parse_buddy_info(const gchar *str_info, const gchar *from_
 }
 
 static void add_str_param_to_info(GString *info, const gchar *key, const gchar *param, const gchar *from_codeset) {
-	if (param != NULL) {
+	if (param) {
 		g_string_append(info, key);
 		g_string_append_c(info, FCHAT_INFO_KEY_SEPARATOR);
 		gchar *converted_param = g_convert(param, -1, from_codeset, "UTF-8", NULL, NULL, NULL);
@@ -99,7 +97,6 @@ static void add_int_param_to_info(GString *info, const gchar *key, gint param, g
 }
 
 gchar *fchat_buddy_info_serialize(FChatBuddyInfo *info, const gchar *from_codeset) {
-	g_return_val_if_fail(info != NULL, NULL);
 	GString *data = g_string_new(NULL);
 
 	add_str_param_to_info(data, "FChatVersion", FCHAT_MY_PROGRAM_VERSION, from_codeset);
