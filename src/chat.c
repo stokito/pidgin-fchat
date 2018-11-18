@@ -1,8 +1,7 @@
 #include "fchat.h"
 
 GHashTable *fchat_prpl_chat_info_defaults(PurpleConnection *gc, const gchar *room) {
-	GHashTable *defaults;
-	defaults = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
+	GHashTable *defaults = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free);
 	g_hash_table_insert(defaults, "room", g_strdup(FCHAT_CHAT_ROOM_NAME));
 	return defaults;
 }
@@ -15,11 +14,15 @@ static void joined_chat(gpointer key, gpointer value, gpointer user_data) {
 void fchat_prpl_chat_join(PurpleConnection *gc, GHashTable *components) {
 	FChatConnection *fchat_conn = (FChatConnection *)gc->proto_data;
 	const gchar *room = g_hash_table_lookup(components, "room");
-	if (strcmp(room, FCHAT_CHAT_ROOM_NAME) != 0) {
+	if (!room) {
+		purple_debug_error("fchat", "Unable to find a room\n");
+		return;
+	}
+	if (g_strcmp0(room, "Main") != 0) {
+		printf("fchat_prpl_chat_join hat room can be used in fchat\n");
 		purple_debug_error("fchat", "Only '%s' chat room can be used in fchat\n", FCHAT_CHAT_ROOM_NAME);
 		return;
 	}
-
 	PurpleConversation *conv = purple_find_chat(gc, FCHAT_CHAT_ROOM_ID);
 	if (!conv) {
 		conv = serv_got_joined_chat(gc, FCHAT_CHAT_ROOM_ID, room);
