@@ -15,8 +15,8 @@ static void fchat_action_set_msg_board(PurplePluginAction *action) {
 	const gchar *msg = purple_account_get_string(account, "msg_board", NULL);
 	purple_request_input(gc, _("Set board"), _("Set message board text"), NULL,
 		msg,
-		TRUE, FALSE, ((gc != NULL) &&
-		(gc->flags & PURPLE_CONNECTION_HTML) ? "html" : NULL),
+		TRUE, FALSE,
+		gc && (gc->flags & PURPLE_CONNECTION_HTML) ? "html" : NULL,
 		_("Save"), G_CALLBACK(set_board_cb), _("Cancel"), NULL,
 		account, NULL, NULL, account
 	);
