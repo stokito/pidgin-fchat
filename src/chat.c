@@ -9,13 +9,13 @@ GHashTable *fchat_prpl_chat_info_defaults(PurpleConnection *gc, const gchar *roo
 
 static void joined_chat(gpointer key, gpointer value, gpointer user_data) {
 	PurpleConvChat *chat = (PurpleConvChat *)user_data;
-	purple_conv_chat_add_user(chat,	(gchar *)key, NULL, PURPLE_CBFLAGS_NONE, FALSE);
+	purple_conv_chat_add_user(chat, (gchar *)key, NULL, PURPLE_CBFLAGS_NONE, FALSE);
 }
 
 void fchat_prpl_chat_join(PurpleConnection *gc, GHashTable *components) {
 	FChatConnection *fchat_conn = (FChatConnection *)gc->proto_data;
 	const gchar *room = g_hash_table_lookup(components, "room");
-	if (strcmp(room, FCHAT_CHAT_ROOM_NAME)) {
+	if (strcmp(room, FCHAT_CHAT_ROOM_NAME) != 0) {
 		purple_debug_error("fchat", "Only '%s' chat room can be used in fchat\n", FCHAT_CHAT_ROOM_NAME);
 		return;
 	}
