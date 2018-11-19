@@ -149,16 +149,16 @@ static void fchat_init(PurplePlugin *plugin) {
 	GList *buddy_list_privacy = NULL;
 	PurpleKeyValuePair *kvp;
 	kvp = g_new0(PurpleKeyValuePair, 1);
-	kvp->key = g_strdup(_("Deny"));
-	kvp->value = g_strdup_printf("%d", FCHAT_BUDDIES_LIST_PRIVACY_DENY);
-	buddy_list_privacy = g_list_append(buddy_list_privacy, kvp);
-	kvp = g_new0(PurpleKeyValuePair, 1);
 	kvp->key = g_strdup(_("Request"));
 	kvp->value = g_strdup_printf("%d", FCHAT_BUDDIES_LIST_PRIVACY_REQUEST);
 	buddy_list_privacy = g_list_append(buddy_list_privacy, kvp);
 	kvp = g_new0(PurpleKeyValuePair, 1);
 	kvp->key = g_strdup(_("Allow"));
 	kvp->value = g_strdup_printf("%d", FCHAT_BUDDIES_LIST_PRIVACY_ALLOW);
+	buddy_list_privacy = g_list_append(buddy_list_privacy, kvp);
+	kvp = g_new0(PurpleKeyValuePair, 1);
+	kvp->key = g_strdup(_("Deny"));
+	kvp->value = g_strdup_printf("%d", FCHAT_BUDDIES_LIST_PRIVACY_DENY);
 	buddy_list_privacy = g_list_append(buddy_list_privacy, kvp);
 
 	option = purple_account_option_list_new(_("Buddy list privacy"), "buddy_list_privacy", buddy_list_privacy);
