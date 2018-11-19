@@ -3,7 +3,7 @@ Section: net
 Priority: extra
 Maintainer: Sergey Ponomarev <stokito@gmail.com>
 Standards-Version: 3.8.3
-Build-Depends: debhelper (>= 7), libgnet-dev (>= 2.0.0), libpurple-dev (>= 2.6.0)
+Build-Depends: debhelper (>= 7), libpurple-dev (>= 2.6.0)
 Homepage: https://launchpad.net/fchat
 
 Package: fchat
