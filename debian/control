@@ -2,16 +2,16 @@ Source: fchat
 Section: net
 Priority: extra
 Maintainer: Sergey Ponomarev <stokito@gmail.com>
-Standards-Version: 3.8.3
-Build-Depends: debhelper (>= 7), libpurple-dev (>= 2.6.0)
-Homepage: https://launchpad.net/fchat
+Standards-Version: 4.1.3
+Build-Depends: debhelper (>= 11), libpurple-dev (>= 2.13.0)
+Homepage: https://github.com/stokito/fchat-pidgin
+Vcs-Browser: https://github.com/stokito/fchat-pidgin
+Vcs-Git: https://github.com/stokito/fchat-pidgin.git
 
 Package: fchat
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: libpurple is a library intended to be used by programmers seeking to write an IM client that connects to many IM networks.
- libpurple is used by several  messengers: Pidgin, Finch, Adium, Instantbird and Telepathy with haze.
- This package add FChat protocol support for libpurple.
+Description: FChat protocol support for libpurple (Pidgin)
  FChat is p2p chat program for local networks based on UDP protocol. 
  Your IP will be used as ID. If you have several network interfaces you can use different IP for them.
  If you want use FChat for all networks enter IP 0.0.0.0 .

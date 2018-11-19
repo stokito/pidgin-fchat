@@ -20,7 +20,7 @@ FCHAT_SOURCES = \
 .PHONY:	all clean install uninstall getpot locale dist
 
 #all:	clean libfchat.so dist sourcepackage
-all:	clean libfchat.so
+all:	clean libfchat.so locale
 
 install:	libfchat.so locale
 #	cp libfchat.so ~/.purple/plugins/
@@ -46,7 +46,7 @@ install:	libfchat.so locale
 	chown root:root ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 #	fchat.mo
 	mkdir --parents ${DESTDIR}/usr/share/locale/ru/LC_MESSAGES/
-	cp ./locale/ru/LC_MESSAGES/fchat.mo ${DESTDIR}/usr/share/locale/ru/LC_MESSAGES/fchat.mo
+	cp ./share/locale/ru/LC_MESSAGES/fchat.mo ${DESTDIR}/usr/share/locale/ru/LC_MESSAGES/fchat.mo
 	chmod 664 ${DESTDIR}/usr/share/locale/ru/LC_MESSAGES/fchat.mo
 	chown root:root ${DESTDIR}/usr/share/locale/ru/LC_MESSAGES/fchat.mo
 
@@ -67,8 +67,8 @@ pot:
 	xgettext --package-name=fchat -k_ -o ./i18n/fchat.pot ${FCHAT_SOURCES}
 
 locale:
-	mkdir -p ./locale/ru/LC_MESSAGES/
-	msgfmt -o ./locale/ru/LC_MESSAGES/fchat.mo ./i18n/ru.po
+	mkdir -p ./share/locale/ru/LC_MESSAGES/
+	msgfmt -o ./share/locale/ru/LC_MESSAGES/fchat.mo ./i18n/ru.po
 
 dist:	${FCHAT_SOURCES} Makefile ./share/pixmaps/pidgin/protocols/16/fchat.png ./share/pixmaps/pidgin/protocols/22/fchat.png ./share/pixmaps/pidgin/protocols/48/fchat.png
 	tar -cf tmp.tar $^

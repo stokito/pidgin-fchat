@@ -1,12 +1,13 @@
+fchat (1.0) cosmic; urgency=low
+
+  * Added new statuses: Busy, On phone, Listening a music
+  * Removed dependency to libgnet
+
+ -- Sergey Ponomarev <stokito@gmail.com>  Mon, 19 Nov 2018 07:00:00 +0200
+
 fchat (0.8-2) karmic; urgency=low
 
   * Initial release
   * Removed 'sudo' from Makefile body
 
  -- Sergey Ponomarev <stokito@gmail.com>  Sun, 10 Jan 2010 20:59:28 +0200
-
-fchat (1.0) cosmic; urgency=low
-
-  * Removed dependency to gnet
-
- -- Sergey Ponomarev <stokito@gmail.com>  Tue, 19 Nov 2018 07:00:00 +0200
