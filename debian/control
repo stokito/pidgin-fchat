@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: Sergey Ponomarev <stokito@gmail.com>
 Standards-Version: 4.1.3
-Build-Depends: debhelper (>= 11), libpurple-dev (>= 2.13.0)
+Build-Depends: debhelper (>= 11), libpurple-dev (>= 1:2.13.0-1ubuntu1)
 Homepage: https://github.com/stokito/pidgin-fchat
 Vcs-Browser: https://github.com/stokito/pidgin-pidgin
 Vcs-Git: https://github.com/stokito/pidgin-fchat.git
