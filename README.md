@@ -54,15 +54,15 @@ Your IP will be used as `Username`. If you have several network interfaces you c
 But most probably just you want use FChat for all networks so enter IP `0.0.0.0`.
 
 ### Encoding problems for non English speakers
-This plugin uses UTF-8 encoding but if you are going to talk with original FChat then you also have to select encoding of your country.
-For example for Russian/Ukrainian users you have to use Win1251.
-To configure encoding Account settings and `Advanced`n tab.
+This plugin uses `UTF-8` encoding but if you are going to talk with original FChat users then you also have to select an encoding of your country.
+For example for Russian/Ukrainian users you have to use the charset `Win1251`.
+To configure encoding Account settings and `Advanced` tab.
 
 ### Manually add a buddy 
 After login FChat will send a broadcast message to connect to all users in LAN. But sometimes this may not work.
 If so you can manually add a buddy by it's IP address: in main menu click on `Buddies` then `Add buddy...`:
-* Buddy's username - input here IP address of the buddy.
-* Alias - input here a name or nickname of the buddy.
+* `Buddy's username` - input here IP address of the buddy.
+* `Alias` - input here a name or nickname of the buddy.
 
 ### Join a chat
 FChat naturally supports a chat room for all users but in Pidgin you have to "join" it yourself.
