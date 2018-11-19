@@ -337,18 +337,15 @@ FChatBuddyInfo *fchat_load_my_buddy_info(PurpleAccount *account) {
 }
 
 void fchat_buddy_info_destroy(FChatBuddyInfo *info) {
-	if (info->full_name)
-		g_free(info->full_name);
-	if (info->address)
-		g_free(info->address);
-	if (info->phone)
-		g_free(info->phone);
-	if (info->email)
-		g_free(info->email);
-	if (info->interest)
-		g_free(info->interest);
-	if (info->additional)
-		g_free(info->additional);
+	if (!info) {
+		return;
+	}
+	g_free(info->full_name);
+	g_free(info->address);
+	g_free(info->phone);
+	g_free(info->email);
+	g_free(info->interest);
+	g_free(info->additional);
 	g_free(info);
 }
 

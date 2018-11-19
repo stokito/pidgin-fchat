@@ -29,15 +29,14 @@ FChatBuddy *fchat_find_buddy(FChatConnection *fchat_conn, const gchar *host, con
 }
 
 void fchat_buddy_delete(gpointer p) {
+	if (!p) {
+		return;
+	}
 	FChatBuddy *buddy = p;
-	if (buddy->host)
-		g_free(buddy->host);
-	if (buddy->alias)
-		g_free(buddy->alias);
-	if (buddy->info)
-		fchat_buddy_info_destroy(buddy->info);
-	if (buddy->addr)
-		g_clear_object(&buddy->addr);
+	g_free(buddy->host);
+	g_free(buddy->alias);
+	fchat_buddy_info_destroy(buddy->info);
+	g_clear_object(&buddy->addr);
 	g_free(buddy);
 }
 

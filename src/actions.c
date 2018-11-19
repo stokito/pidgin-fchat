@@ -2,9 +2,7 @@
 
 static void set_board_cb(PurpleAccount *account, const gchar *msg) {
 	FChatConnection *fchat_conn = (FChatConnection *)account->gc->proto_data;
-	if (fchat_conn->my_buddy->msg_board) {
-		g_free(fchat_conn->my_buddy->msg_board);
-	}
+	g_free(fchat_conn->my_buddy->msg_board);
 	fchat_conn->my_buddy->msg_board = g_strdup(msg);
 	purple_account_set_string(account, "msg_board", msg);
 }

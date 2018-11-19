@@ -59,7 +59,7 @@ static gboolean fchat_receive_packet(GIOChannel *iochannel, GIOCondition c, gpoi
 }
 
 static gboolean fchat_receive_packet_error(GIOChannel *iochannel, GIOCondition c, gpointer data) {
-	purple_debug_warning("fchat", "fchat_receive_packet_error: GIOCondition c=%d\n", c);
+	purple_debug_error("fchat", "fchat_receive_packet_error: GIOCondition c=%d\n", c);
 	return FALSE;
 }
 
@@ -89,7 +89,7 @@ void fchat_prpl_login(PurpleAccount *account) {
 		purple_connection_set_state(gc, PURPLE_CONNECTING);
 	} else {
 		purple_connection_error_reason(gc, PURPLE_CONNECTION_ERROR_NETWORK_ERROR, _("Couldn't create UDP socket"));
-		purple_debug_warning("fchat", "Couldn't create UDP socket (%d): %s", port, error->message);
+		purple_debug_error("fchat", "Couldn't create UDP socket (%d): %s", port, error->message);
 		g_clear_error(&error);
 		return;
 	}
@@ -101,7 +101,7 @@ void fchat_prpl_login(PurpleAccount *account) {
 	}
 	if (g_socket_bind(fchat_conn->socket, socket_address, TRUE, &error) == FALSE) {
 		purple_connection_error_reason(gc, PURPLE_CONNECTION_ERROR_NETWORK_ERROR, _("Error bind"));
-		purple_debug_warning("fchat", "Couldn't bind UDP socket (%d): %s", port, error->message);
+		purple_debug_error("fchat", "Couldn't bind UDP socket (%d): %s", port, error->message);
 		g_clear_error(&error);
 		return;
 	}
@@ -148,7 +148,7 @@ void fchat_prpl_close(PurpleConnection *gc) {
 
 gboolean fchat_keepalive(gpointer data) {
 	FChatConnection *fchat_conn = data;
-	purple_debug_warning("fchat", "fchat_prpl_keepalive %d %d\n", fchat_conn->keepalive_timeout, fchat_conn->keepalive_periods);
+	purple_debug_info("fchat", "fchat_prpl_keepalive %d %d\n", fchat_conn->keepalive_timeout, fchat_conn->keepalive_periods);
 	fchat_conn->timer = purple_timeout_add_seconds((guint) (fchat_conn->keepalive_timeout * 60), fchat_keepalive, fchat_conn);
 
 	GHashTableIter iter;
@@ -172,8 +172,7 @@ void fchat_connection_delete(FChatConnection *fchat_conn) {
 	g_io_channel_unref(fchat_conn->channel);
 	if (fchat_conn->buddies)
 		g_hash_table_destroy(fchat_conn->buddies);
-	if (fchat_conn->my_buddy)
-		fchat_buddy_delete(fchat_conn->my_buddy);
+	fchat_buddy_delete(fchat_conn->my_buddy);
 	g_free(fchat_conn);
 }
 
@@ -181,8 +180,7 @@ void fchat_delete_packet_blocks(FChatPacketBlocks *packet_blocks) {
 	FChatPacketBlocksVector packet_blocks_v = (FChatPacketBlocksVector)packet_blocks;
 	for (int block_num = 0; block_num < FCHAT_BLOCKS_COUNT; block_num++) {
 		gchar *block = packet_blocks_v[block_num];
-		if (block)
-			g_free(block);
+		g_free(block);
 	}
 	g_free(packet_blocks);
 }
