@@ -1,11 +1,11 @@
-fchat (1.0) cosmic; urgency=low
+pidgin-fchat (1.0) cosmic; urgency=low
 
   * Added new statuses: Busy, On phone, Listening a music
   * Removed dependency to libgnet
 
  -- Sergey Ponomarev <stokito@gmail.com>  Mon, 19 Nov 2018 07:00:00 +0200
 
-fchat (0.8-2) karmic; urgency=low
+pidgin-fchat (0.8-2) karmic; urgency=low
 
   * Initial release
   * Removed 'sudo' from Makefile body
