@@ -31,7 +31,7 @@ install:	libfchat.so locale
 	chown root:root ${DESTDIR}/usr/lib/purple-2/libfchat.so
 #	fchat16.png
 	mkdir --parents ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/
-	cp ./share/pixmaps/pidgin/protocols/48/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
+	cp ./share/pixmaps/pidgin/protocols/16/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 	chmod 664 ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 	chown root:root ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 #	fchat22.png
