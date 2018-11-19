@@ -10,6 +10,7 @@ Vcs-Git: https://github.com/stokito/pidgin-fchat.git
 
 Package: pidgin-fchat
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: FChat protocol support for libpurple (Pidgin)
- FChat is a server less p2p chat program for local networks based on UDP protocol.
+ FChat is a server less p2p chat program for local
+ networks based on UDP protocol.
