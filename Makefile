@@ -31,17 +31,17 @@ install:	libfchat.so locale
 	chown root:root ${DESTDIR}/usr/lib/purple-2/libfchat.so
 #	fchat16.png
 	mkdir --parents ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/
-	cp ./share/pixmaps/fchat16.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
+	cp ./share/pixmaps/pidgin/protocols/48/fchat16.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 	chmod 664 ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 	chown root:root ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 #	fchat22.png
 	mkdir --parents ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/
-	cp ./share/pixmaps/fchat22.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png
+	cp ./share/pixmaps/pidgin/protocols/22/fchat22.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png
 	chmod 664 ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png
 	chown root:root ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png
 #	fchat48.png
 	mkdir --parents ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/
-	cp ./share/pixmaps/fchat48.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
+	cp ./share/pixmaps/pidgin/protocols/48/fchat48.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 	chmod 664 ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 	chown root:root ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 #	fchat.mo
