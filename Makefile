@@ -63,11 +63,11 @@ clean:
 	rm -rf prpl-fchat
 
 pot:
-	xgettext --package-name=fchat -k_ -o ./po/fchat.pot ${FCHAT_SOURCES}
+	xgettext --package-name=fchat -k_ -o ./share/i18n/fchat.pot ${FCHAT_SOURCES}
 
 locale:
 	mkdir -p ./locale/ru/LC_MESSAGES/
-	msgfmt -o ./locale/ru/LC_MESSAGES/fchat.mo ./po/ru.po
+	msgfmt -o ./locale/ru/LC_MESSAGES/fchat.mo ./share/i18n/ru.po
 
 dist:	${FCHAT_SOURCES} Makefile ../ico/fchat16.png ../ico/fchat22.png ../ico/fchat48.png
 	tar -cf tmp.tar $^
