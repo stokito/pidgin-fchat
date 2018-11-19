@@ -31,17 +31,17 @@ install:	libfchat.so locale
 	chown root:root ${DESTDIR}/usr/lib/purple-2/libfchat.so
 #	fchat16.png
 	mkdir --parents ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/
-	cp ./share/pixmaps/pidgin/protocols/48/fchat16.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
+	cp ./share/pixmaps/pidgin/protocols/48/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 	chmod 664 ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 	chown root:root ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png
 #	fchat22.png
 	mkdir --parents ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/
-	cp ./share/pixmaps/pidgin/protocols/22/fchat22.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png
+	cp ./share/pixmaps/pidgin/protocols/22/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png
 	chmod 664 ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png
 	chown root:root ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png
 #	fchat48.png
 	mkdir --parents ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/
-	cp ./share/pixmaps/pidgin/protocols/48/fchat48.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
+	cp ./share/pixmaps/pidgin/protocols/48/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 	chmod 664 ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 	chown root:root ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 #	fchat.mo
@@ -53,6 +53,7 @@ install:	libfchat.so locale
 uninstall:
 #	rm -f ~/.purple/plugins/libfchat.so
 	rm -f ${DESTDIR}/usr/lib/purple-2/libfchat.so
+	rm -f ${DESTDIR}/usr/share/locale/ru/LC_MESSAGES/fchat.mo
 	rm -f ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/16/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/22/fchat.png ${DESTDIR}/usr/share/pixmaps/pidgin/protocols/48/fchat.png
 
 libfchat.so:	${FCHAT_SOURCES}
@@ -69,7 +70,7 @@ locale:
 	mkdir -p ./locale/ru/LC_MESSAGES/
 	msgfmt -o ./locale/ru/LC_MESSAGES/fchat.mo ./i18n/ru.po
 
-dist:	${FCHAT_SOURCES} Makefile ../ico/fchat16.png ../ico/fchat22.png ../ico/fchat48.png
+dist:	${FCHAT_SOURCES} Makefile ./share/pixmaps/pidgin/protocols/16/fchat.png ./share/pixmaps/pidgin/protocols/22/fchat.png ./share/pixmaps/pidgin/protocols/48/fchat.png
 	tar -cf tmp.tar $^
 	mkdir prpl-fchat
 	mv tmp.tar prpl-fchat
