@@ -138,23 +138,31 @@ void fchat_send_status_cmd(FChatConnection *fchat_conn, FChatBuddy *buddy, Purpl
 		State:;N */
 
 	const gchar *status_id = purple_status_get_id(status);
-	gchar *msg_block = NULL;
-
-	if (!strcmp(status_id, FCHAT_STATUS_ONLINE)) {
-		msg_block = g_strdup("State:;N");
-	} else if (!strcmp(status_id, FCHAT_STATUS_AWAY)) {
-		const gchar *status_msg_utf8 = purple_status_get_attr_string(status, "message");
-		if (status_msg_utf8) {
-			gchar *status_msg = fchat_encode(fchat_conn, status_msg_utf8, -1);
-			msg_block = g_strdup_printf("State:Away;Y\n\r%s", status_msg);
-			g_free(status_msg);
-		} else {
-			msg_block = g_strdup("State:Away;Y");
-		}
+	const gchar *fchat_status;
+	if (g_strcmp0(status_id, FCHAT_STATUS_ONLINE) == 0) {
+		fchat_status = "State:;N";
+	} else if (g_strcmp0(status_id, FCHAT_STATUS_BUSY) == 0) {
+		fchat_status = "State:Busy;Y";
+	} else if (g_strcmp0(status_id, FCHAT_STATUS_PHONE) == 0) {
+		fchat_status = "State:Phone;Y";
+	} else if (g_strcmp0(status_id, FCHAT_STATUS_MUSIC) == 0) {
+		fchat_status = "State:Music;Y";
+	} else if (g_strcmp0(status_id, FCHAT_STATUS_AWAY) == 0) {
+		fchat_status = "State:Away;Y";
 	} else {
-		purple_debug_warning("fchat", "Status %s can't be sended", status_id);
+		purple_debug_warning("fchat", "Status %s can't be sent\n", status_id);
 		return;
 	}
+	gchar *msg_block;
+	const gchar *status_msg_utf8 = purple_status_get_attr_string(status, "message");
+	if (status_msg_utf8) {
+		gchar *fchat_status_msg = fchat_encode(fchat_conn, status_msg_utf8, -1);
+		msg_block = g_strdup_printf("%s\n\r%s", fchat_status, fchat_status_msg);
+		g_free(fchat_status_msg);
+	} else {
+		msg_block = g_strdup(fchat_status);
+	}
+
 	FChatPacketBlocks *packet_blocks = g_new0(FChatPacketBlocks, 1);
 	gchar str_cmd = FCHAT_STATUS_CMD;
 	packet_blocks->command = g_strndup(&str_cmd, 1);

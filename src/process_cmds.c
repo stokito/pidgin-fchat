@@ -116,24 +116,34 @@ static void fchat_process_status_cmd(FChatConnection *fchat_conn, FChatBuddy *bu
 
 	gchar *state = g_strndup(state_begin_pos, state_len);
 	gchar state_enabled = *(state_end_pos + 1);
-	g_free(state);
 
 	if (state_enabled == 'Y') {
 		const gchar *msg = strstr(state_end_pos + 2, "\r\n");
-		if (msg) {
-			gchar *msg_utf8 = fchat_decode(fchat_conn, msg, -1);
-			if (msg_utf8) {
-				purple_prpl_got_user_status(fchat_conn->gc->account, buddy->host, FCHAT_STATUS_AWAY, "message", msg_utf8, NULL);
-				g_free(msg_utf8);
-			}
+		gchar *msg_utf8 = msg ? fchat_decode(fchat_conn, msg, -1) : NULL;
+
+		const char *status_id;
+		if (g_ascii_strcasecmp(state, FCHAT_STATUS_AWAY) == 0) {
+			status_id = FCHAT_STATUS_AWAY;
+		} else if (g_ascii_strcasecmp(state, FCHAT_STATUS_BUSY) == 0) {
+			status_id = FCHAT_STATUS_BUSY;
+		} else if (g_ascii_strcasecmp(state, FCHAT_STATUS_PHONE) == 0) {
+			status_id = FCHAT_STATUS_PHONE;
+		} else if (g_ascii_strcasecmp(state, FCHAT_STATUS_MUSIC) == 0) {
+			status_id = FCHAT_STATUS_MUSIC;
 		} else {
-			purple_prpl_got_user_status(fchat_conn->gc->account, buddy->host, FCHAT_STATUS_AWAY, "message", NULL, NULL);
+			status_id = FCHAT_STATUS_AWAY;
+			if (!msg_utf8) { // if no Away message then use the status name as msg
+				msg_utf8 = state;
+			}
 		}
+		purple_prpl_got_user_status(fchat_conn->gc->account, buddy->host, status_id, "message", msg_utf8, NULL);
+		g_free(msg_utf8);
 	} else if (state_enabled == 'N') {
 		purple_prpl_got_user_status(fchat_conn->gc->account, buddy->host, FCHAT_STATUS_ONLINE, NULL);
 	} else {
 		purple_debug_error("fchat", "Unknown status enabled %c\n", state_enabled);
 	}
+	g_free(state);
 }
 
 static void fchat_process_alias_change_cmd(FChatConnection *fchat_conn, FChatBuddy *buddy, FChatPacketBlocks *packet_blocks) {

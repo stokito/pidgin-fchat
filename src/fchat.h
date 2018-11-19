@@ -21,9 +21,12 @@
 #include <purple.h>
 
 #define FCHATPRPL_ID "prpl-fchat"
-#define FCHAT_STATUS_ONLINE   "online"
-#define FCHAT_STATUS_AWAY     "away"
-#define FCHAT_STATUS_OFFLINE  "offline"
+#define FCHAT_STATUS_ONLINE   "Online"
+#define FCHAT_STATUS_AWAY     "Away"
+#define FCHAT_STATUS_BUSY     "Busy"
+#define FCHAT_STATUS_MUSIC    "Music" // i.e. tune
+#define FCHAT_STATUS_PHONE    "Phone"
+#define FCHAT_STATUS_OFFLINE  "Offline"
 
 /*
  * Описание протокола FChat версии 4.6.1 (278)

@@ -18,16 +18,31 @@ GList *fchat_prpl_status_types(PurpleAccount *account) {
 	PurpleStatusType *type;
 
 	type = purple_status_type_new(PURPLE_STATUS_AVAILABLE, FCHAT_STATUS_ONLINE, FCHAT_STATUS_ONLINE, TRUE);
+	types = g_list_append(types, type);
+
+	type = purple_status_type_new_with_attrs(PURPLE_STATUS_AWAY, FCHAT_STATUS_AWAY, _("Away"), TRUE, TRUE, FALSE,
+		"message", _("Message"), purple_value_new(PURPLE_TYPE_STRING), NULL);
+	types = g_list_append(types, type);
+
+	type = purple_status_type_new_with_attrs(PURPLE_STATUS_UNAVAILABLE, FCHAT_STATUS_BUSY, _("Busy"), TRUE, TRUE, FALSE,
+		"message", _("Message"), purple_value_new(PURPLE_TYPE_STRING), NULL);
+	types = g_list_append(types, type);
+
+	type = purple_status_type_new_with_attrs(PURPLE_STATUS_MOBILE, FCHAT_STATUS_PHONE, _("Phone"), TRUE, TRUE, FALSE,
+		"message", _("Message"), purple_value_new(PURPLE_TYPE_STRING), NULL);
 	types = g_list_prepend(types, type);
 
-	type = purple_status_type_new(PURPLE_STATUS_AWAY, FCHAT_STATUS_AWAY,  FCHAT_STATUS_AWAY, TRUE);
-	purple_status_type_add_attr(type, "message", _("Message"), purple_value_new(PURPLE_TYPE_STRING));
+	type = purple_status_type_new_with_attrs(PURPLE_STATUS_TUNE, FCHAT_STATUS_MUSIC, NULL, FALSE, TRUE, FALSE,
+		PURPLE_TUNE_ARTIST, _("Tune Artist"), purple_value_new(G_TYPE_STRING),
+		PURPLE_TUNE_TITLE, _("Tune Title"), purple_value_new(G_TYPE_STRING),
+		PURPLE_TUNE_ALBUM, _("Tune Album"), purple_value_new(G_TYPE_STRING),
+		NULL);
 	types = g_list_prepend(types, type);
 
 	type = purple_status_type_new(PURPLE_STATUS_OFFLINE, NULL, NULL, TRUE);
-	types = g_list_prepend(types, type);
+	types = g_list_append(types, type);
 
-	return g_list_reverse(types);
+	return types;
 }
 
 typedef struct {
@@ -41,7 +56,6 @@ void func_send_status(gpointer key, gpointer value, gpointer user_data) {
 }
 
 void fchat_prpl_set_status(PurpleAccount *account, PurpleStatus *status) {
-	const gchar *msg = purple_status_get_attr_string(status, "message");
 	StatusFuncData *status_func_data = g_new0(StatusFuncData, 1);
 	status_func_data->fchat_conn = (FChatConnection *)account->gc->proto_data;
 	status_func_data->status = status;
