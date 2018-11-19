@@ -3,43 +3,40 @@
 # output every command that modifies files on the build system.
 #export DH_VERBOSE = 1
 
+PACKAGE=pidgin-fchat
+
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
-
 	touch configure-stamp
 
 
 build: build-stamp
 
-build-stamp: configure-stamp  
+build-stamp: configure-stamp
 	dh_testdir
-
 	# Add here commands to compile the package.
 	$(MAKE)
-	#docbook-to-man debian/fchat.sgml > fchat.1
-
+	#docbook-to-man debian/$(PACKAGE).sgml > fchat.1
 	touch $@
 
-clean: 
+clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
-
 	# Add here commands to clean up after the build process.
 	$(MAKE) clean
-
-	dh_clean 
+	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_prep  
+#	dh_clean -k
+	dh_prep
 	dh_installdirs
-
 	# Add here commands to install the package into debian/fchat.
-	$(MAKE) DESTDIR=$(CURDIR)/debian/fchat install
+	$(MAKE) DESTDIR=$(CURDIR)/debian/$(PACKAGE) install
 
 
 # Build architecture-independent files here.
@@ -51,8 +48,8 @@ binary-arch: install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs 
-	dh_installdocs
-	dh_installexamples
+#	dh_installdocs
+#	dh_installexamples
 #	dh_install
 #	dh_installmenu
 #	dh_installdebconf
@@ -64,7 +61,7 @@ binary-arch: install
 #	dh_installinit
 #	dh_installcron
 #	dh_installinfo
-	dh_installman
+#	dh_installman
 	dh_link
 	dh_strip
 	dh_compress
