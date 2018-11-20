@@ -17,12 +17,13 @@ In fact this is a plugin for [libpurple](https://developer.pidgin.im/wiki/WhatIs
 * One Main Chat Room.
 * Private messages.
 * You can send a beep signal to urgently ask for attention.
-* There is no any roaster with contacts but you can ask a buddy to give it's own contact list.  
+* There is no any roaster with contacts but you can ask a buddy to give its own contact list.  
 * Message Board - you can pin a message for everyone like "I'm selling notebook".
 * Rich user info
 * Custom statuses are partially supported.
 
 ## Install
+Currently it's supported only Linux and tested on Ubuntu Mate.
 Since this is a plugin then you need to install IM client. For example to install Pidgin:
     sudo apt install pidgin
 
@@ -55,12 +56,12 @@ But most probably just you want use FChat for all networks so enter IP `0.0.0.0`
 
 ### Encoding problems for non English speakers
 This plugin uses `UTF-8` encoding but if you are going to talk with original FChat users then you also have to select an encoding of your country.
-For example for Russian/Ukrainian users you have to use the charset `Win1251`.
+For example for Russian/Ukrainian users you have to use the charset `CP1251`.
 To configure encoding Account settings and `Advanced` tab.
 
 ### Manually add a buddy 
 After login FChat will send a broadcast message to connect to all users in LAN. But sometimes this may not work.
-If so you can manually add a buddy by it's IP address: in main menu click on `Buddies` then `Add buddy...`:
+If so you can manually add a buddy by its IP address: in main menu click on `Buddies` then `Add buddy...`:
 * `Buddy's username` - input here IP address of the buddy.
 * `Alias` - input here a name or nickname of the buddy.
 
