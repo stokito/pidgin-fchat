@@ -69,3 +69,7 @@ pot:
 locale:
 	mkdir -p ./share/locale/ru/LC_MESSAGES/
 	msgfmt -o ./share/locale/ru/LC_MESSAGES/fchat.mo ./i18n/ru.po
+
+# https://developer.pidgin.im/wiki/CHowTo/Valgrind
+debug:
+	valgrind --tool=memcheck --leak-check=yes --leak-resolution=high --num-callers=20 --trace-children=no --child-silent-after-fork=yes --track-origins=yes --track-fds=yes pidgin -d 2>&1 | tee valgrind.log
