@@ -25,6 +25,7 @@ In fact this is a plugin for [libpurple](https://developer.pidgin.im/wiki/WhatIs
 ## Install
 Currently, it's supported only Linux and tested on Ubuntu Mate.
 Since this is a plugin then you need to install IM client. For example to install Pidgin:
+
     sudo apt install pidgin
 
 ### Ubuntu

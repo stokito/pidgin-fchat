@@ -1,3 +1,9 @@
+pidgin-fchat (1.0.1) disco; urgency=low
+
+  * Recompiled for new libpurple
+
+ -- Sergey Ponomarev <stokito@gmail.com>  Tue, 20 Aug 2019 13:30:00 +0200
+
 pidgin-fchat (1.0) cosmic; urgency=low
 
   * Added new statuses: Busy, On phone, Listening a music
