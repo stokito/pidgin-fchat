@@ -3,4 +3,4 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Files: *
 Copyright: 2010, Sergey Ponomarev  <stokito@gmail.com>
     2010, <Andrey Ponomarev>
-License: CC0
+License: GPLv2
